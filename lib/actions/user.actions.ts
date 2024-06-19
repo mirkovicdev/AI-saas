@@ -8,16 +8,24 @@ import { handleError } from "../utils";
 
 // CREATE
 export async function createUser(user: CreateUserParams) {
-  try {
-    await connectToDb();
-
-    const newUser = await User.create(user);
-
-    return JSON.parse(JSON.stringify(newUser));
-  } catch (error) {
-    handleError(error);
+    try {
+      await connectToDb();
+      const newUser = await User.create(user);
+      return JSON.parse(JSON.stringify(newUser));
+    } catch (error) {
+      handleError(error);
+      
+      let errorMessage = "Error creating user";
+  
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else {
+        console.error("Unknown error type:", error);
+      }
+  
+      throw new Error(errorMessage);
+    }
   }
-}
 
 // READ
 export async function getUserById(userId: string) {
